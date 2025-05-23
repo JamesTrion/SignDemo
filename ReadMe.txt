@@ -1,0 +1,1 @@
+2025/04/22 SignDemo.sln requires setting x86 to compile. Using x64 for compiling will lead to errors. 

@@ -1,0 +1,386 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="DataClass">
+      <UniqueIdentifier>{819f3ac4-eb46-4763-850a-764cd4b04939}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pages">
+      <UniqueIdentifier>{30147eab-d6a8-44b0-b7c4-cff79a708091}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{087c5aa7-b3a8-4250-8610-b7af857aea1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Dialog">
+      <UniqueIdentifier>{816e6735-d53c-449c-98c8-f65e217152fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\DirObj">
+      <UniqueIdentifier>{639eb14e-7ed3-4773-a049-f86cfa2c144e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\GDI">
+      <UniqueIdentifier>{8f41307a-842a-425f-a495-7a90333f0209}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\LogClass">
+      <UniqueIdentifier>{16701613-ca96-4271-96d9-c636a67c178b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\MemClass">
+      <UniqueIdentifier>{dca9ae03-2124-4e9e-a934-2cd7e3aa56d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\StrCoding">
+      <UniqueIdentifier>{e281a4d8-3f6c-4cba-bb02-b00308c2a37c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\UIClass">
+      <UniqueIdentifier>{d319c5b3-c350-4ccc-b3bc-a33fb8f4a771}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\TextConvert">
+      <UniqueIdentifier>{0d9728d4-156b-48da-bbeb-bd387c0c778f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pages\Page_Sign">
+      <UniqueIdentifier>{f938df35-b23e-4b65-b5d2-c4f4a9b35eea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Json">
+      <UniqueIdentifier>{48808f8b-faad-4758-be67-c29803e057c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\WorkThread">
+      <UniqueIdentifier>{7709f100-8455-435e-a260-4ca671af9471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Timer">
+      <UniqueIdentifier>{12a11aea-6c39-489a-873b-47b28f84a7d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dlg">
+      <UniqueIdentifier>{f77799ea-42da-4d13-b13c-831f2533d349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\DisplayDevices">
+      <UniqueIdentifier>{ca1f18fd-2457-44da-a3b4-a64e1dfddb5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\NameObj">
+      <UniqueIdentifier>{273ec8d9-8726-4895-83a4-2aaf71225ff4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="HuionTablet.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="HuionTabletDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DataClass\DataClassHeader.h">
+      <Filter>DataClass</Filter>
+    </ClInclude>
+    <ClInclude Include="DataClass\ZUser.h">
+      <Filter>DataClass</Filter>
+    </ClInclude>
+    <ClInclude Include="Pages\PageHeaderData.h">
+      <Filter>Pages</Filter>
+    </ClInclude>
+    <ClInclude Include="Pages\PagesHeader.h">
+      <Filter>Pages</Filter>
+    </ClInclude>
+    <ClInclude Include="PageMessageHeader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ZMainFrame2.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\Dialog\DialogHeader.h">
+      <Filter>Components\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\Dialog\ShadowWindow.h">
+      <Filter>Components\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\Dialog\ZBaseDialog.h">
+      <Filter>Components\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\DirObj\DirObj.h">
+      <Filter>Components\DirObj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\GDI\GDIHeader.h">
+      <Filter>Components\GDI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\GDI\ZGDI.h">
+      <Filter>Components\GDI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\GDI\ZMemDC.h">
+      <Filter>Components\GDI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\LogClass\LogFile.h">
+      <Filter>Components\LogClass</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\MemClass\ZMemery.h">
+      <Filter>Components\MemClass</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\StrCoding\ZStrCoding.h">
+      <Filter>Components\StrCoding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\TextConvert\ZTextConvert.h">
+      <Filter>Components\TextConvert</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\UIClass\GDIFunc.h">
+      <Filter>Components\UIClass</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\UIClass\UIClassHeader.h">
+      <Filter>Components\UIClass</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\UIClass\ZButton.h">
+      <Filter>Components\UIClass</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\UIClass\ZComboUI.h">
+      <Filter>Components\UIClass</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\UIClass\ZControlUI.h">
+      <Filter>Components\UIClass</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\UIClass\ZEditUI.h">
+      <Filter>Components\UIClass</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\UIClass\ZHorizontalBox.h">
+      <Filter>Components\UIClass</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\CommnuFunc.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Pages\Page_Sign\ZPage_Sign.h">
+      <Filter>Pages\Page_Sign</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\Json\assertions.h">
+      <Filter>Components\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\Json\autolink.h">
+      <Filter>Components\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\Json\config.h">
+      <Filter>Components\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\Json\features.h">
+      <Filter>Components\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\Json\forwards.h">
+      <Filter>Components\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\Json\json.h">
+      <Filter>Components\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\Json\json_batchallocator.h">
+      <Filter>Components\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\Json\json_tool.h">
+      <Filter>Components\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\Json\reader.h">
+      <Filter>Components\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\Json\stdafx.h">
+      <Filter>Components\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\Json\value.h">
+      <Filter>Components\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\Json\writer.h">
+      <Filter>Components\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\Json\ZJsonHelp.h">
+      <Filter>Components\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\WorkThread\AutomLock.h">
+      <Filter>Components\WorkThread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\WorkThread\Dictionary.h">
+      <Filter>Components\WorkThread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\UIClass\CMultilineLabelUI.h">
+      <Filter>Components\UIClass</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\Timer\ZTimer.h">
+      <Filter>Components\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\WorkThread\WorkThread.h">
+      <Filter>Components\WorkThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Dlg\ZDlg_Sign.h">
+      <Filter>Dlg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\Device\DisplayDevices\ZDisplayDevices.h">
+      <Filter>Components\DisplayDevices</Filter>
+    </ClInclude>
+    <ClInclude Include="DataClass\ZFinger5.h">
+      <Filter>DataClass</Filter>
+    </ClInclude>
+    <ClInclude Include="DataClass\ZFinger10.h">
+      <Filter>DataClass</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\GDI\ZMemImage.h">
+      <Filter>Components\GDI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Components\NameObj\ZNameObj.h">
+      <Filter>Components\NameObj</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="HuionTablet.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="HuionTabletDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DataClass\ZUser.cpp">
+      <Filter>DataClass</Filter>
+    </ClCompile>
+    <ClCompile Include="ZMainFrame2.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\Dialog\ZBaseDialog.cpp">
+      <Filter>Components\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\DirObj\DirObj.cpp">
+      <Filter>Components\DirObj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\GDI\ZGDI.cpp">
+      <Filter>Components\GDI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\GDI\ZMemDC.cpp">
+      <Filter>Components\GDI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\LogClass\LogFile.cpp">
+      <Filter>Components\LogClass</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\MemClass\ZMemery.cpp">
+      <Filter>Components\MemClass</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\StrCoding\ZStrCoding.cpp">
+      <Filter>Components\StrCoding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\TextConvert\ZTextConvert.cpp">
+      <Filter>Components\TextConvert</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\UIClass\GDIFunc.cpp">
+      <Filter>Components\UIClass</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\UIClass\ZButton.cpp">
+      <Filter>Components\UIClass</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\UIClass\ZComboUI.cpp">
+      <Filter>Components\UIClass</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\UIClass\ZControlUI.cpp">
+      <Filter>Components\UIClass</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\UIClass\ZEditUI.cpp">
+      <Filter>Components\UIClass</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\UIClass\ZHorizontalBox.cpp">
+      <Filter>Components\UIClass</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\CommnuFunc.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Pages\Page_Sign\ZPage_Sign.cpp">
+      <Filter>Pages\Page_Sign</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\Json\json_reader.cpp">
+      <Filter>Components\Json</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\Json\json_value.cpp">
+      <Filter>Components\Json</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\Json\json_writer.cpp">
+      <Filter>Components\Json</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\Json\ZJsonHelp.cpp">
+      <Filter>Components\Json</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\WorkThread\AutomLock.cpp">
+      <Filter>Components\WorkThread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\WorkThread\Dictionary.cpp">
+      <Filter>Components\WorkThread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\UIClass\CMultilineLabelUI.cpp">
+      <Filter>Components\UIClass</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\Timer\ZTimer.cpp">
+      <Filter>Components\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\WorkThread\WorkThread.cpp">
+      <Filter>Components\WorkThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Dlg\ZDlg_Sign.cpp">
+      <Filter>Dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\Device\DisplayDevices\ZDisplayDevices.cpp">
+      <Filter>Components\DisplayDevices</Filter>
+    </ClCompile>
+    <ClCompile Include="DataClass\ZFinger5.cpp">
+      <Filter>DataClass</Filter>
+    </ClCompile>
+    <ClCompile Include="DataClass\ZFinger10.cpp">
+      <Filter>DataClass</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\GDI\ZMemImage.cpp">
+      <Filter>Components\GDI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Components\NameObj\ZNameObj.cpp">
+      <Filter>Components\NameObj</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="HuionTablet.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\HuionTablet.rc2">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ProjectController.json" />
+    <None Include="..\..\..\..\Components\Json\json_internalarray.inl">
+      <Filter>Components\Json</Filter>
+    </None>
+    <None Include="..\..\..\..\Components\Json\json_internalmap.inl">
+      <Filter>Components\Json</Filter>
+    </None>
+    <None Include="..\..\..\..\Components\Json\json_valueiterator.inl">
+      <Filter>Components\Json</Filter>
+    </None>
+    <None Include="..\..\..\..\Components\Json\sconscript">
+      <Filter>Components\Json</Filter>
+    </None>
+    <None Include="res\json2.bin">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\json3.bin">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Lang.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\HuionTablet.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
