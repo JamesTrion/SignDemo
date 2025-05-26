@@ -245,6 +245,7 @@
     <ClInclude Include="DataClass\ZFinger10.h" />
     <ClInclude Include="DataClass\ZFinger5.h" />
     <ClInclude Include="DataClass\ZUser.h" />
+    <ClInclude Include="Dlg\DebugWriter.h" />
     <ClInclude Include="Dlg\ZDlg_Sign.h" />
     <ClInclude Include="HuionTablet.h" />
     <ClInclude Include="HuionTabletDlg.h" />
@@ -288,6 +289,7 @@
     <ClCompile Include="DataClass\ZFinger10.cpp" />
     <ClCompile Include="DataClass\ZFinger5.cpp" />
     <ClCompile Include="DataClass\ZUser.cpp" />
+    <ClCompile Include="Dlg\DebugWriter.cpp" />
     <ClCompile Include="Dlg\ZDlg_Sign.cpp" />
     <ClCompile Include="HuionTablet.cpp" />
     <ClCompile Include="HuionTabletDlg.cpp" />

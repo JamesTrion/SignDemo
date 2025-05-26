@@ -237,6 +237,9 @@
     <ClInclude Include="..\..\..\..\Components\NameObj\ZNameObj.h">
       <Filter>Components\NameObj</Filter>
     </ClInclude>
+    <ClInclude Include="Dlg\DebugWriter.h">
+      <Filter>Dlg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HuionTablet.cpp">
@@ -346,6 +349,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\Components\NameObj\ZNameObj.cpp">
       <Filter>Components\NameObj</Filter>
+    </ClCompile>
+    <ClCompile Include="Dlg\DebugWriter.cpp">
+      <Filter>Dlg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

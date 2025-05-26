@@ -1,5 +1,7 @@
 #pragma once
 
+#include "DebugWriter.h"
+
 class ZDlg_Sign : public ZBaseDialog
 {
 public:

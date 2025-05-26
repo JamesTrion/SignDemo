@@ -216,6 +216,17 @@ void ZDlg_Sign::OnTabletData(WPARAM wParam, LPARAM lParam)
 	emTabletDataType DataType = (emTabletDataType)wParam;
 	uTabletData tbData = *(uTabletData *)lParam;
 	
+	//***********added by Trion on 2025/05/26***********
+	BOOL bVertical = TRUE;
+	if (bVertical == TRUE)
+	{
+		long lnX = tbData.m_Pen.m_nX;
+		long lnY = tbData.m_Pen.m_nY;
+		//tbData.m_Pen.m_nX = lnY;
+		//tbData.m_Pen.m_nY = lnX;
+	}
+	//***********added by Trion on 2025/05/26***********
+
 	if (emTabletDataType::DataType_Pen == DataType)
 	{
 		static Gdiplus::Point ptS = { 0,0 };
@@ -231,10 +242,21 @@ void ZDlg_Sign::OnTabletData(WPARAM wParam, LPARAM lParam)
 		INT64 nH = rcCanvas.bottom - rcCanvas.top;
 
 		
+		
 		{
 			g_SignData.AddPoint({ tbData.m_Pen.m_nX ,tbData.m_Pen.m_nY }, tbData.m_Pen.m_nP);
 			
 			SIZE szDC = g_pSignDC->GetSize();
+
+			CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi
+			(
+				_T("Vertical is %d , original:( %d , %d ) , Table:( %d , %d ) , TabletMaxInfo:( %d , %d ) , Canvas( %d, %d ) , DC( %d , %d )"),
+				bVertical, tbData.m_Pen.m_nX, tbData.m_Pen.m_nY,
+				m_szTable.cx, m_szTable.cy,							//drawing area dimension
+				g_TabletInfo.m_nMaxX, g_TabletInfo.m_nMaxY,			//total tablet dimension
+				nW, nH,												//canvas dimension (width and height)
+				szDC.cx,szDC.cy										//DC dimension (width and height)
+			);
 
 			Gdiplus::Point ptIn;
 			ptIn.X = tbData.m_Pen.m_nX * szDC.cx / m_szTable.cx;

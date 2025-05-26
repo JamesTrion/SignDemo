@@ -32,6 +32,9 @@ ZPage_Sign::ZPage_Sign(void)
 	g_pPage_Sign = this;
 	m_WorkThread.InitWorkThread(this);
 	Build();
+	
+	//CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi(_T("Vertical is %d"),true);
+	//int nTemp = 0;
 }
 
 ZPage_Sign::~ZPage_Sign(void)
