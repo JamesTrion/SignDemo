@@ -40,5 +40,10 @@ protected:
 	CButtonUI *m_pBtnOK = NULL;
 
 	SIZE m_szTable;
+
+	BOOL m_bVertical;				//added by Trion on 2025/05/27
+	BOOL IsVerticalMonitor();
+	BOOL CheckForVerticalMonitor(RECT rcWnd);
+	void OnTabletDataEx(WPARAM wParam, LPARAM lParam);
 };
 

@@ -31,6 +31,10 @@ ZDlg_Sign::~ZDlg_Sign(void)
 
 UINT ZDlg_Sign::ShowModal(HWND hParentWnd,RECT rcWnd)
 {
+	//added by Trion on 2025/05/27
+	this->m_bVertical=this->CheckForVerticalMonitor(rcWnd);
+	//added by Trion on 2025/05/27
+
 	if (NULL != m_hWnd)
 	{
 		Close(0);
@@ -213,18 +217,13 @@ BOOL ZDlg_Sign::BtnHitTest(const uTabletData &tbData)
 }
 void ZDlg_Sign::OnTabletData(WPARAM wParam, LPARAM lParam)
 {
+	return this->OnTabletDataEx(wParam, lParam);
+
 	emTabletDataType DataType = (emTabletDataType)wParam;
 	uTabletData tbData = *(uTabletData *)lParam;
 	
 	//***********added by Trion on 2025/05/26***********
-	BOOL bVertical = TRUE;
-	if (bVertical == TRUE)
-	{
-		long lnX = tbData.m_Pen.m_nX;
-		long lnY = tbData.m_Pen.m_nY;
-		//tbData.m_Pen.m_nX = lnY;
-		//tbData.m_Pen.m_nY = lnX;
-	}
+	BOOL bVertical = this->IsVerticalMonitor();
 	//***********added by Trion on 2025/05/26***********
 
 	if (emTabletDataType::DataType_Pen == DataType)
@@ -237,12 +236,13 @@ void ZDlg_Sign::OnTabletData(WPARAM wParam, LPARAM lParam)
 			return;
 		}
 
+		
+
 		RECT rcCanvas = m_CanvasUI->GetPos();
 		INT64 nW = rcCanvas.right - rcCanvas.left;
 		INT64 nH = rcCanvas.bottom - rcCanvas.top;
-
-		
-		
+		//nW = m_CanvasUI->GetWidth();				//added by Trion on 2025/05/27
+		//nH = m_CanvasUI->GetHeight();				//added by Trion on 2025/05/27
 		{
 			g_SignData.AddPoint({ tbData.m_Pen.m_nX ,tbData.m_Pen.m_nY }, tbData.m_Pen.m_nP);
 			
@@ -250,14 +250,17 @@ void ZDlg_Sign::OnTabletData(WPARAM wParam, LPARAM lParam)
 
 			CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi
 			(
-				_T("Vertical is %d , original:( %d , %d ) , Table:( %d , %d ) , TabletMaxInfo:( %d , %d ) , Canvas( %d, %d ) , DC( %d , %d )"),
+				_T("Vertical is %d , original:( %d , %d ) , Table:( %d , %d ) , TabletMaxInfo:( %d , %d ) , Canvas( %d, %d ) , DC( %d , %d ) , Canvas( Left:%d , Top:%d , Right:%d , Bottom:%d ) , Canvas W/H( %d , %d )"),
 				bVertical, tbData.m_Pen.m_nX, tbData.m_Pen.m_nY,
 				m_szTable.cx, m_szTable.cy,							//drawing area dimension
 				g_TabletInfo.m_nMaxX, g_TabletInfo.m_nMaxY,			//total tablet dimension
 				nW, nH,												//canvas dimension (width and height)
-				szDC.cx,szDC.cy										//DC dimension (width and height)
+				szDC.cx,szDC.cy,										//DC dimension (width and height)
+				rcCanvas.left,rcCanvas.top,rcCanvas.right,rcCanvas.bottom,
+				m_CanvasUI->GetWidth(),m_CanvasUI->GetHeight()
 			);
 
+			//draw on memory dc
 			Gdiplus::Point ptIn;
 			ptIn.X = tbData.m_Pen.m_nX * szDC.cx / m_szTable.cx;
 			ptIn.Y = tbData.m_Pen.m_nY * szDC.cy / m_szTable.cy;
@@ -275,11 +278,29 @@ void ZDlg_Sign::OnTabletData(WPARAM wParam, LPARAM lParam)
 				ptS = ptIn;
 			}
 		}
+
 		if (g_hMainWnd) ::PostMessage(g_hMainWnd,WM_UpdataSign,0,0);
 
+		//draw on current window
 		Gdiplus::Point ptIn;
 		ptIn.X = rcCanvas.left + tbData.m_Pen.m_nX * nW / g_TabletInfo.m_nMaxX;
 		ptIn.Y = rcCanvas.top  + tbData.m_Pen.m_nY * nH / g_TabletInfo.m_nMaxY;
+		if (bVertical == TRUE)
+		{
+			double dbPercentX = (double)tbData.m_Pen.m_nX / (double)g_TabletInfo.m_nMaxX;
+			double dbPercentY = (double)tbData.m_Pen.m_nY / (double)g_TabletInfo.m_nMaxY;
+			long lnNewX = (long)(dbPercentX * (double)g_TabletInfo.m_nMaxY);
+			long lnNewY = (long)(dbPercentY * (double)g_TabletInfo.m_nMaxX);
+
+			ptIn.X = rcCanvas.left + lnNewX * nW / g_TabletInfo.m_nMaxY;
+			ptIn.Y = rcCanvas.top +  lnNewY * nH / g_TabletInfo.m_nMaxX;
+			CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi
+			(
+				_T("New XY( %d , %d ) , NewDimensin( %d , %d ) , NewPoint( %d , %d ) , Percent( %f , %f ) , CurrentTabletPos( %d , %d )"),
+				lnNewX,lnNewY, g_TabletInfo.m_nMaxY, g_TabletInfo.m_nMaxX, ptIn.X,ptIn.Y,dbPercentX,dbPercentY,
+				tbData.m_Pen.m_nX, tbData.m_Pen.m_nY
+			);
+		}
 
 		if (tbData.m_Pen.m_nP == 0) ptS = ptIn;
 		else
@@ -295,3 +316,119 @@ void ZDlg_Sign::OnTabletData(WPARAM wParam, LPARAM lParam)
 	}
 
 }
+
+void ZDlg_Sign::OnTabletDataEx(WPARAM wParam, LPARAM lParam)
+{
+	emTabletDataType DataType = (emTabletDataType)wParam;
+	uTabletData tbData = *(uTabletData*)lParam;
+
+	//***********added by Trion on 2025/05/26***********
+	BOOL bVertical = this->IsVerticalMonitor();
+	//***********added by Trion on 2025/05/26***********
+
+	if (emTabletDataType::DataType_Pen == DataType)
+	{
+		static Gdiplus::Point ptS = { 0,0 };
+
+		if (BtnHitTest(tbData))
+		{
+			tbData.m_Pen.m_nP = 0;
+			return;
+		}
+
+
+		RECT rcCanvas = m_CanvasUI->GetPos();
+		INT64 nW = rcCanvas.right - rcCanvas.left;
+		INT64 nH = rcCanvas.bottom - rcCanvas.top;
+		//nW = m_CanvasUI->GetWidth();				//added by Trion on 2025/05/27
+		//nH = m_CanvasUI->GetHeight();				//added by Trion on 2025/05/27
+		{
+			g_SignData.AddPoint({ tbData.m_Pen.m_nX ,tbData.m_Pen.m_nY }, tbData.m_Pen.m_nP);
+
+			SIZE szDC = g_pSignDC->GetSize();
+			//szDC.cx = (long)nW;
+			//szDC.cy = (long)nH;
+
+			CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi
+			(
+				_T("Vertical is %d , original:( %d , %d ) , Table:( %d , %d ) , TabletMaxInfo:( %d , %d ) , Canvas( %d, %d ) , DC( %d , %d ) , Canvas( Left:%d , Top:%d , Right:%d , Bottom:%d ) , Canvas W/H( %d , %d )"),
+				bVertical, tbData.m_Pen.m_nX, tbData.m_Pen.m_nY,
+				m_szTable.cx, m_szTable.cy,							//drawing area dimension
+				g_TabletInfo.m_nMaxX, g_TabletInfo.m_nMaxY,			//total tablet dimension
+				nW, nH,												//canvas dimension (width and height)
+				szDC.cx, szDC.cy,										//DC dimension (width and height)
+				rcCanvas.left, rcCanvas.top, rcCanvas.right, rcCanvas.bottom,
+				m_CanvasUI->GetWidth(), m_CanvasUI->GetHeight()
+			);
+
+			//draw on memory dc for updating it on the main dialog
+			Gdiplus::Point ptIn;
+			ptIn.X = tbData.m_Pen.m_nX * szDC.cx / m_szTable.cx;
+			ptIn.Y = tbData.m_Pen.m_nY * szDC.cy / m_szTable.cy;
+
+			static Gdiplus::Point ptS = { 0,0 };
+			if (tbData.m_Pen.m_nP == 0) ptS = ptIn;
+			else
+			{
+				Gdiplus::Graphics Graph(g_pSignDC->DC());
+				m_pPen->SetWidth(tbData.m_Pen.m_nP / 1000 + 1);
+				Graph.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+
+				Graph.DrawLine(m_pPen, ptS, ptIn);
+
+				ptS = ptIn;
+			}
+		}
+
+		if (g_hMainWnd) ::PostMessage(g_hMainWnd, WM_UpdataSign, 0, 0);
+
+		//draw on current window
+		Gdiplus::Point ptIn;
+		ptIn.X = rcCanvas.left + tbData.m_Pen.m_nX * nW / g_TabletInfo.m_nMaxX;
+		ptIn.Y = rcCanvas.top + tbData.m_Pen.m_nY * nH / g_TabletInfo.m_nMaxY;
+		if (bVertical == TRUE)
+		{
+			double dbPercentX = (double)tbData.m_Pen.m_nX / (double)g_TabletInfo.m_nMaxX;
+			double dbPercentY = (double)tbData.m_Pen.m_nY / (double)g_TabletInfo.m_nMaxY;
+			long lnNewX = (long)(dbPercentX * (double)g_TabletInfo.m_nMaxY);
+			long lnNewY = (long)(dbPercentY * (double)g_TabletInfo.m_nMaxX);
+
+			ptIn.X = rcCanvas.left + lnNewX * nW / g_TabletInfo.m_nMaxY;
+			ptIn.Y = rcCanvas.top + lnNewY * nH / g_TabletInfo.m_nMaxX;
+			CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi
+			(
+				_T("New XY( %d , %d ) , NewDimensin( %d , %d ) , NewPoint( %d , %d ) , Percent( %f , %f ) , CurrentTabletPos( %d , %d )"),
+				lnNewX, lnNewY, g_TabletInfo.m_nMaxY, g_TabletInfo.m_nMaxX, ptIn.X, ptIn.Y, dbPercentX, dbPercentY,
+				tbData.m_Pen.m_nX, tbData.m_Pen.m_nY
+			);
+		}
+
+		if (tbData.m_Pen.m_nP == 0) ptS = ptIn;
+		else
+		{
+			Gdiplus::Graphics Graph(m_hWnd);
+			m_pPen->SetWidth(tbData.m_Pen.m_nP / 1000 + 1);
+			Graph.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+
+			Graph.DrawLine(m_pPen, ptS, ptIn);
+
+			ptS = ptIn;
+		}
+	}
+
+}
+
+//***********added by Trion on 2025/05/27***********
+BOOL ZDlg_Sign::IsVerticalMonitor()
+{
+	return this->m_bVertical;
+}
+
+BOOL ZDlg_Sign::CheckForVerticalMonitor(RECT rcWnd)
+{
+	int nWidth =  abs(rcWnd.right - rcWnd.left);
+	int nHeight = abs(rcWnd.bottom - rcWnd.top);
+	if (nHeight > nWidth) return TRUE;
+	return FALSE;
+}
+//***********added by Trion on 2025/05/27***********
