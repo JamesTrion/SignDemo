@@ -45,5 +45,7 @@ protected:
 	BOOL IsVerticalMonitor();
 	BOOL CheckForVerticalMonitor(RECT rcWnd);
 	void OnTabletDataEx(WPARAM wParam, LPARAM lParam);
+	BOOL BtnHitTestEx(const uTabletData& tbData);
+	Point GetConvertedPoint(uTabletData tbData, BOOL bVertical = TRUE);
 };
 

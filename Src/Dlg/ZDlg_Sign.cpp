@@ -190,6 +190,8 @@ LRESULT ZDlg_Sign::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 BOOL ZDlg_Sign::BtnHitTest(const uTabletData &tbData)
 {
+	return this->BtnHitTestEx(tbData);
+
 	static int OldP = 0;
 
 	RECT rcWnd;
@@ -338,16 +340,13 @@ void ZDlg_Sign::OnTabletDataEx(WPARAM wParam, LPARAM lParam)
 
 
 		RECT rcCanvas = m_CanvasUI->GetPos();
-		INT64 nW = rcCanvas.right - rcCanvas.left;
-		INT64 nH = rcCanvas.bottom - rcCanvas.top;
-		//nW = m_CanvasUI->GetWidth();				//added by Trion on 2025/05/27
-		//nH = m_CanvasUI->GetHeight();				//added by Trion on 2025/05/27
+		long nW = rcCanvas.right - rcCanvas.left;
+		long nH = rcCanvas.bottom - rcCanvas.top;
+		
 		{
 			g_SignData.AddPoint({ tbData.m_Pen.m_nX ,tbData.m_Pen.m_nY }, tbData.m_Pen.m_nP);
 
 			SIZE szDC = g_pSignDC->GetSize();
-			//szDC.cx = (long)nW;
-			//szDC.cy = (long)nH;
 
 			CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi
 			(
@@ -365,6 +364,28 @@ void ZDlg_Sign::OnTabletDataEx(WPARAM wParam, LPARAM lParam)
 			Gdiplus::Point ptIn;
 			ptIn.X = tbData.m_Pen.m_nX * szDC.cx / m_szTable.cx;
 			ptIn.Y = tbData.m_Pen.m_nY * szDC.cy / m_szTable.cy;
+			if (bVertical == TRUE)
+			{
+				//convert to vertical position in rcCanvas
+				int nX = rcCanvas.left + (g_TabletInfo.m_nMaxY - tbData.m_Pen.m_nY) * nW / g_TabletInfo.m_nMaxY;
+				int nY = rcCanvas.top + tbData.m_Pen.m_nX * nH / g_TabletInfo.m_nMaxX;
+
+				int nNewWidth = szDC.cx;
+				int nNewHeight = szDC.cy;
+
+				nX = (g_TabletInfo.m_nMaxY - tbData.m_Pen.m_nY) * nNewWidth / g_TabletInfo.m_nMaxY;
+				nY = tbData.m_Pen.m_nX * nNewHeight / g_TabletInfo.m_nMaxX;
+
+				ptIn.X = nX;
+				ptIn.Y = nY;
+
+				CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi
+				(
+					_T("New DC XY( %d , %d ) , New Converted DC Pos( %d , %d )"),
+					ptIn.X,ptIn.Y,
+					nX,nY
+				);
+			}
 
 			static Gdiplus::Point ptS = { 0,0 };
 			if (tbData.m_Pen.m_nP == 0) ptS = ptIn;
@@ -388,17 +409,14 @@ void ZDlg_Sign::OnTabletDataEx(WPARAM wParam, LPARAM lParam)
 		ptIn.Y = rcCanvas.top + tbData.m_Pen.m_nY * nH / g_TabletInfo.m_nMaxY;
 		if (bVertical == TRUE)
 		{
-			double dbPercentX = (double)tbData.m_Pen.m_nX / (double)g_TabletInfo.m_nMaxX;
-			double dbPercentY = (double)tbData.m_Pen.m_nY / (double)g_TabletInfo.m_nMaxY;
-			long lnNewX = (long)(dbPercentX * (double)g_TabletInfo.m_nMaxY);
-			long lnNewY = (long)(dbPercentY * (double)g_TabletInfo.m_nMaxX);
+			ptIn.X = rcCanvas.left + (g_TabletInfo.m_nMaxY - tbData.m_Pen.m_nY) * nW / g_TabletInfo.m_nMaxY;
+			ptIn.Y = rcCanvas.top + tbData.m_Pen.m_nX * nH / g_TabletInfo.m_nMaxX;
 
-			ptIn.X = rcCanvas.left + lnNewX * nW / g_TabletInfo.m_nMaxY;
-			ptIn.Y = rcCanvas.top + lnNewY * nH / g_TabletInfo.m_nMaxX;
 			CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi
 			(
-				_T("New XY( %d , %d ) , NewDimensin( %d , %d ) , NewPoint( %d , %d ) , Percent( %f , %f ) , CurrentTabletPos( %d , %d )"),
-				lnNewX, lnNewY, g_TabletInfo.m_nMaxY, g_TabletInfo.m_nMaxX, ptIn.X, ptIn.Y, dbPercentX, dbPercentY,
+				_T("NewDimensin( %d , %d ) , NewPoint( %d , %d ) , CurrentTabletPos( %d , %d )"),
+				g_TabletInfo.m_nMaxY, g_TabletInfo.m_nMaxX, 
+				ptIn.X, ptIn.Y,
 				tbData.m_Pen.m_nX, tbData.m_Pen.m_nY
 			);
 		}
@@ -430,5 +448,48 @@ BOOL ZDlg_Sign::CheckForVerticalMonitor(RECT rcWnd)
 	int nHeight = abs(rcWnd.bottom - rcWnd.top);
 	if (nHeight > nWidth) return TRUE;
 	return FALSE;
+}
+
+BOOL ZDlg_Sign::BtnHitTestEx(const uTabletData& tbData)
+{
+	static int OldP = 0;
+
+	RECT rcWnd;
+	::GetClientRect(m_hWnd, &rcWnd);
+
+	INT64 nW = rcWnd.right - rcWnd.left;
+	INT64 nH = rcWnd.bottom - rcWnd.top;
+
+	POINT ptIn;
+	ptIn.x = rcWnd.left + tbData.m_Pen.m_nX * nW / g_TabletInfo.m_nMaxX;
+	ptIn.y = rcWnd.top + tbData.m_Pen.m_nY * nH / g_TabletInfo.m_nMaxY;
+
+	RECT rcReSign = m_pBtnReSign->GetPos();
+	RECT rcOK = m_pBtnOK->GetPos();
+	CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi
+	(
+		_T("ReSign Rect ( Left:%d , Top:%d , Right:%d , Bottom:%d ) , rcOK ( Left:%d , Top:%d , Right:%d , Bottom:%d )"),
+		rcReSign.left,rcReSign.top,rcReSign.right,rcReSign.bottom,
+		rcOK.left, rcOK.top, rcOK.right, rcOK.bottom
+	);
+
+	if (OldP > 0 && tbData.m_Pen.m_nP == 0)
+	{
+		if (::PtInRect(&rcReSign, ptIn))  OnResetSign();
+		else if (::PtInRect(&rcOK, ptIn)) OnOK();
+	}
+
+	OldP = tbData.m_Pen.m_nP;
+
+	if (ptIn.y >= rcOK.top) return TRUE;
+	return FALSE;
+}
+
+Point ZDlg_Sign::GetConvertedPoint(uTabletData tbData, BOOL bVertical)
+{
+	Point ptRet(0,0);
+	
+	return ptRet;
+		
 }
 //***********added by Trion on 2025/05/27***********
