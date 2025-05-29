@@ -352,20 +352,6 @@ void ZDlg_Sign::OnTabletDataEx(WPARAM wParam, LPARAM lParam)
 
 			SIZE szDC = g_pSignDC->GetSize();
 
-			/*
-			CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi
-			(
-				_T("Vertical is %d , original:( %d , %d ) , Table:( %d , %d ) , TabletMaxInfo:( %d , %d ) , Canvas( %d, %d ) , DC( %d , %d ) , Canvas( Left:%d , Top:%d , Right:%d , Bottom:%d ) , Canvas W/H( %d , %d )"),
-				bVertical, tbData.m_Pen.m_nX, tbData.m_Pen.m_nY,
-				m_szTable.cx, m_szTable.cy,							//drawing area dimension
-				g_TabletInfo.m_nMaxX, g_TabletInfo.m_nMaxY,			//total tablet dimension
-				nW, nH,												//canvas dimension (width and height)
-				szDC.cx, szDC.cy,										//DC dimension (width and height)
-				rcCanvas.left, rcCanvas.top, rcCanvas.right, rcCanvas.bottom,
-				m_CanvasUI->GetWidth(), m_CanvasUI->GetHeight()
-			);
-			*/
-
 			//draw on memory dc for updating it on the main dialog
 			Gdiplus::Point ptIn;
 			ptIn.X = tbData.m_Pen.m_nX * szDC.cx / m_szTable.cx;
@@ -373,6 +359,7 @@ void ZDlg_Sign::OnTabletDataEx(WPARAM wParam, LPARAM lParam)
 			if (bVertical == TRUE)
 			{
 				//convert to vertical position in rcCanvas
+				/*		//original codes , marked by Trion on 2025/05/29
 				int nX = rcCanvas.left + (g_TabletInfo.m_nMaxY - tbData.m_Pen.m_nY) * nW / g_TabletInfo.m_nMaxY;
 				int nY = rcCanvas.top + tbData.m_Pen.m_nX * nH / g_TabletInfo.m_nMaxX;
 
@@ -384,6 +371,23 @@ void ZDlg_Sign::OnTabletDataEx(WPARAM wParam, LPARAM lParam)
 
 				ptIn.X = nX;
 				ptIn.Y = nY;
+				*/
+				
+						//added by Trion on 2025/05/29 new modified codes that work but only improved a little bit.
+				int nX = rcCanvas.left + (g_TabletInfo.m_nMaxY - tbData.m_Pen.m_nY) * nW / m_szTable.cy;
+				int nY = rcCanvas.top + tbData.m_Pen.m_nX * nH / m_szTable.cx;
+
+				int nNewWidth = szDC.cx;
+				int nNewHeight = szDC.cy;
+				nNewWidth = szDC.cy * 9 / 16;		//a new width
+				int nOffsetX = (szDC.cx - nNewWidth) / 2;
+
+				nX = (g_TabletInfo.m_nMaxY - tbData.m_Pen.m_nY) * nNewWidth / m_szTable.cy;
+				nY = tbData.m_Pen.m_nX * nNewHeight / m_szTable.cx;
+
+				ptIn.X = nX + nOffsetX;
+				ptIn.Y = nY;
+				
 
 				/*
 				CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi
@@ -400,7 +404,15 @@ void ZDlg_Sign::OnTabletDataEx(WPARAM wParam, LPARAM lParam)
 			else
 			{
 				Gdiplus::Graphics Graph(g_pSignDC->DC());
-				m_pPen->SetWidth(tbData.m_Pen.m_nP / 1000 + 1);
+				
+				float fPressurePenWidth = (float)tbData.m_Pen.m_nP / (float)1000.0f;
+				fPressurePenWidth = fPressurePenWidth * 9.0f / 16.0f;
+				if (fPressurePenWidth <= 1.0f)
+					fPressurePenWidth = 1.0f;
+				float fPenWidth = fPressurePenWidth;
+				m_pPen->SetWidth(fPenWidth);
+				
+				//m_pPen->SetWidth(tbData.m_Pen.m_nP / 1000 + 1);
 				Graph.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
 
 				Graph.DrawLine(m_pPen, ptS, ptIn);
@@ -419,17 +431,12 @@ void ZDlg_Sign::OnTabletDataEx(WPARAM wParam, LPARAM lParam)
 		{
 			ptIn.X = rcCanvas.left + (g_TabletInfo.m_nMaxY - tbData.m_Pen.m_nY) * nW / g_TabletInfo.m_nMaxY;
 			ptIn.Y = rcCanvas.top + tbData.m_Pen.m_nX * nH / g_TabletInfo.m_nMaxX;
-			/*
-			CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi
-			(
-				_T("NewDimensin( %d , %d ) , NewPoint( %d , %d ) , CurrentTabletPos( %d , %d )"),
-				g_TabletInfo.m_nMaxY, g_TabletInfo.m_nMaxX, 
-				ptIn.X, ptIn.Y,
-				tbData.m_Pen.m_nX, tbData.m_Pen.m_nY
-			);
-			*/
 		}
 
+		//added by Trion on 2025/05/29
+		this->DrawOnWnd(tbData, &ptS, ptIn);
+
+		/*		//original codes , marked by Trion on 2025/05/29
 		if (tbData.m_Pen.m_nP == 0) ptS = ptIn;
 		else
 		{
@@ -441,6 +448,7 @@ void ZDlg_Sign::OnTabletDataEx(WPARAM wParam, LPARAM lParam)
 
 			ptS = ptIn;
 		}
+		*/
 	}
 
 }
@@ -536,5 +544,24 @@ POINT ZDlg_Sign::GetConvertedPoint(uTabletData tbData, BOOL bVertical)
 
 	return ptRet;
 		
+}
+
+BOOL ZDlg_Sign::DrawOnWnd(uTabletData tbData, Point* ptRet, Point ptInput)
+{
+	if (tbData.m_Pen.m_nP == 0) 
+	{
+		*ptRet = ptInput;
+		return FALSE;
+	}
+	
+	Gdiplus::Graphics Graph(m_hWnd);
+	m_pPen->SetWidth(tbData.m_Pen.m_nP / 1000 + 1);
+	Graph.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+
+	Graph.DrawLine(m_pPen, *ptRet, ptInput);
+		
+	*ptRet = ptInput;
+
+	return TRUE;
 }
 //***********added by Trion on 2025/05/27***********

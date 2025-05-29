@@ -47,5 +47,6 @@ protected:
 	void OnTabletDataEx(WPARAM wParam, LPARAM lParam);
 	BOOL BtnHitTestEx(const uTabletData& tbData);
 	POINT GetConvertedPoint(uTabletData tbData, BOOL bVertical = TRUE);
+	BOOL DrawOnWnd(uTabletData tbData,Point * ptRet,Point ptInput);
 };
 
