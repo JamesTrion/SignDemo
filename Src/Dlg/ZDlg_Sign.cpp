@@ -250,6 +250,7 @@ void ZDlg_Sign::OnTabletData(WPARAM wParam, LPARAM lParam)
 			
 			SIZE szDC = g_pSignDC->GetSize();
 
+			/*
 			CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi
 			(
 				_T("Vertical is %d , original:( %d , %d ) , Table:( %d , %d ) , TabletMaxInfo:( %d , %d ) , Canvas( %d, %d ) , DC( %d , %d ) , Canvas( Left:%d , Top:%d , Right:%d , Bottom:%d ) , Canvas W/H( %d , %d )"),
@@ -261,6 +262,7 @@ void ZDlg_Sign::OnTabletData(WPARAM wParam, LPARAM lParam)
 				rcCanvas.left,rcCanvas.top,rcCanvas.right,rcCanvas.bottom,
 				m_CanvasUI->GetWidth(),m_CanvasUI->GetHeight()
 			);
+			*/
 
 			//draw on memory dc
 			Gdiplus::Point ptIn;
@@ -296,12 +298,14 @@ void ZDlg_Sign::OnTabletData(WPARAM wParam, LPARAM lParam)
 
 			ptIn.X = rcCanvas.left + lnNewX * nW / g_TabletInfo.m_nMaxY;
 			ptIn.Y = rcCanvas.top +  lnNewY * nH / g_TabletInfo.m_nMaxX;
+			/*
 			CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi
 			(
 				_T("New XY( %d , %d ) , NewDimensin( %d , %d ) , NewPoint( %d , %d ) , Percent( %f , %f ) , CurrentTabletPos( %d , %d )"),
 				lnNewX,lnNewY, g_TabletInfo.m_nMaxY, g_TabletInfo.m_nMaxX, ptIn.X,ptIn.Y,dbPercentX,dbPercentY,
 				tbData.m_Pen.m_nX, tbData.m_Pen.m_nY
 			);
+			*/
 		}
 
 		if (tbData.m_Pen.m_nP == 0) ptS = ptIn;
@@ -348,6 +352,7 @@ void ZDlg_Sign::OnTabletDataEx(WPARAM wParam, LPARAM lParam)
 
 			SIZE szDC = g_pSignDC->GetSize();
 
+			/*
 			CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi
 			(
 				_T("Vertical is %d , original:( %d , %d ) , Table:( %d , %d ) , TabletMaxInfo:( %d , %d ) , Canvas( %d, %d ) , DC( %d , %d ) , Canvas( Left:%d , Top:%d , Right:%d , Bottom:%d ) , Canvas W/H( %d , %d )"),
@@ -359,6 +364,7 @@ void ZDlg_Sign::OnTabletDataEx(WPARAM wParam, LPARAM lParam)
 				rcCanvas.left, rcCanvas.top, rcCanvas.right, rcCanvas.bottom,
 				m_CanvasUI->GetWidth(), m_CanvasUI->GetHeight()
 			);
+			*/
 
 			//draw on memory dc for updating it on the main dialog
 			Gdiplus::Point ptIn;
@@ -379,12 +385,14 @@ void ZDlg_Sign::OnTabletDataEx(WPARAM wParam, LPARAM lParam)
 				ptIn.X = nX;
 				ptIn.Y = nY;
 
+				/*
 				CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi
 				(
 					_T("New DC XY( %d , %d ) , New Converted DC Pos( %d , %d )"),
 					ptIn.X,ptIn.Y,
 					nX,nY
 				);
+				*/
 			}
 
 			static Gdiplus::Point ptS = { 0,0 };
@@ -411,7 +419,7 @@ void ZDlg_Sign::OnTabletDataEx(WPARAM wParam, LPARAM lParam)
 		{
 			ptIn.X = rcCanvas.left + (g_TabletInfo.m_nMaxY - tbData.m_Pen.m_nY) * nW / g_TabletInfo.m_nMaxY;
 			ptIn.Y = rcCanvas.top + tbData.m_Pen.m_nX * nH / g_TabletInfo.m_nMaxX;
-
+			/*
 			CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi
 			(
 				_T("NewDimensin( %d , %d ) , NewPoint( %d , %d ) , CurrentTabletPos( %d , %d )"),
@@ -419,6 +427,7 @@ void ZDlg_Sign::OnTabletDataEx(WPARAM wParam, LPARAM lParam)
 				ptIn.X, ptIn.Y,
 				tbData.m_Pen.m_nX, tbData.m_Pen.m_nY
 			);
+			*/
 		}
 
 		if (tbData.m_Pen.m_nP == 0) ptS = ptIn;
@@ -454,6 +463,7 @@ BOOL ZDlg_Sign::BtnHitTestEx(const uTabletData& tbData)
 {
 	static int OldP = 0;
 
+	/*
 	RECT rcWnd;
 	::GetClientRect(m_hWnd, &rcWnd);
 
@@ -463,15 +473,21 @@ BOOL ZDlg_Sign::BtnHitTestEx(const uTabletData& tbData)
 	POINT ptIn;
 	ptIn.x = rcWnd.left + tbData.m_Pen.m_nX * nW / g_TabletInfo.m_nMaxX;
 	ptIn.y = rcWnd.top + tbData.m_Pen.m_nY * nH / g_TabletInfo.m_nMaxY;
+	*/
+
+	POINT ptIn=this->GetConvertedPoint(tbData,this->IsVerticalMonitor());
 
 	RECT rcReSign = m_pBtnReSign->GetPos();
 	RECT rcOK = m_pBtnOK->GetPos();
+
+	/*
 	CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi
 	(
 		_T("ReSign Rect ( Left:%d , Top:%d , Right:%d , Bottom:%d ) , rcOK ( Left:%d , Top:%d , Right:%d , Bottom:%d )"),
 		rcReSign.left,rcReSign.top,rcReSign.right,rcReSign.bottom,
 		rcOK.left, rcOK.top, rcOK.right, rcOK.bottom
 	);
+	*/
 
 	if (OldP > 0 && tbData.m_Pen.m_nP == 0)
 	{
@@ -485,10 +501,39 @@ BOOL ZDlg_Sign::BtnHitTestEx(const uTabletData& tbData)
 	return FALSE;
 }
 
-Point ZDlg_Sign::GetConvertedPoint(uTabletData tbData, BOOL bVertical)
+POINT ZDlg_Sign::GetConvertedPoint(uTabletData tbData, BOOL bVertical)
 {
-	Point ptRet(0,0);
+	POINT ptRet;
 	
+	/*
+	RECT rcCanvas = m_CanvasUI->GetPos();
+	long nW = rcCanvas.right - rcCanvas.left;
+	long nH = rcCanvas.bottom - rcCanvas.top;
+	*/
+
+	RECT rcWnd;
+	::GetClientRect(m_hWnd, &rcWnd);
+	long nW = rcWnd.right - rcWnd.left;
+	long nH = rcWnd.bottom - rcWnd.top;
+	
+	ptRet.x = rcWnd.left + tbData.m_Pen.m_nX * nW / g_TabletInfo.m_nMaxX;
+	ptRet.y = rcWnd.top + tbData.m_Pen.m_nY * nH / g_TabletInfo.m_nMaxY;
+	if (bVertical == TRUE)
+	{
+		ptRet.x = rcWnd.left + (g_TabletInfo.m_nMaxY - tbData.m_Pen.m_nY) * nW / g_TabletInfo.m_nMaxY;
+		ptRet.y = rcWnd.top + tbData.m_Pen.m_nX * nH / g_TabletInfo.m_nMaxX;
+	}
+
+	/*
+	CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi
+	(
+		_T("GetConvertedPoint , Vertical is %d , NewDimensin( %d , %d ) , NewPoint( %d , %d ) , CurrentTabletPos( %d , %d )"),
+		bVertical,g_TabletInfo.m_nMaxY, g_TabletInfo.m_nMaxX,
+		ptRet.x, ptRet.y,
+		tbData.m_Pen.m_nX, tbData.m_Pen.m_nY
+	);
+	*/
+
 	return ptRet;
 		
 }
