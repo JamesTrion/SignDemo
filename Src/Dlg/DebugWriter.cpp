@@ -70,7 +70,8 @@ BOOL CDebugWriter::OutputDBGStringMultipleAutoClose(TCHAR * pszFormat,...)
 	TCHAR* p = buf;
 	va_list args;
     va_start(args, pszFormat);
-    _vstprintf(p, pszFormat, args);
+    //_vstprintf(p, pszFormat, args);			//marked by Trion on 2026/01/06
+	_vstprintf(p,4096 ,pszFormat, args);		//added by Trion on 2026/01/06
     va_end(args);
 
 	const int nSize=4096 + 24;
@@ -135,7 +136,8 @@ BOOL CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi(TCHAR* pszFormat, ...)
 	TCHAR* p = buf;
 	va_list args;
 	va_start(args, pszFormat);
-	_vstprintf(p, pszFormat, args);
+	//_vstprintf(p, pszFormat, args);			//marked by Trion on 2026/01/06
+	_vstprintf(p,4096 ,pszFormat, args);		//added by Trion on 2026/01/06
 	va_end(args);
 
 	const int nSize = 4096 + 24;
