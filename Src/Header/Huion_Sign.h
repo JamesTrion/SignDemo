@@ -31,11 +31,12 @@ extern "C"
 	DLL_EXPORT int STDCALL SetCallback_TabletEventProc(TABLEEVENTPROC pFunc);
 	DLL_EXPORT int STDCALL SendCmdToTablet(emCmdToTablet nCmd,long nParam);
 	DLL_EXPORT void STDCALL StartScan();
+	DLL_EXPORT int STDCALL GetDeviceStatusEx();	//added by Trion on 2026/02/06
 
 	typedef int(STDCALL *Func_GetErrorMessage)(int errorCode, char* errorMsg);
 	typedef int(STDCALL *Func_SetCallback_TabletDataProc)(TABLETDATAPROC pFunc);
 	typedef int(STDCALL *Func_SetCallback_TabletEventProc)(TABLEEVENTPROC pFunc);
 	typedef int(STDCALL *Func_SendCmdToTablet)(emCmdToTablet nCmd, long nParam);
 	typedef int(STDCALL *Func_StartScan)();
+	typedef int(STDCALL *Func_GetDeviceStatus)();	//added by Trion on 2026/02/06
 }
-

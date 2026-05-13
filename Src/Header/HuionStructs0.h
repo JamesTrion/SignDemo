@@ -7,7 +7,6 @@
 #define RET_FAILD_FUNCS_EXIST    (4)
 #define RET_FAILD_ERROR_PARAM    (5)
 #define RET_Disconnected        (-2)
-#define RET_TabletNotFound       (6)			//added by Trion on 2026/05/13
 
 // ansi字符版，设备信息
 typedef struct _DEVICE_INFO 
@@ -64,8 +63,7 @@ enum emTabletDataType
 enum emTabletEventType
 {
 	EventType_TabletConnected, //设备已经连接
-	EventType_TabletDisconnected, //设备已经断开连接
-	EventType_TabletNotFound		//added by Trion on 2026/05/13 for defining Tablet-Not-Found state
+	EventType_TabletDisconnected //设备已经断开连接
 };
 union uTabletData
 {
@@ -76,7 +74,7 @@ union uTabletData
 		long m_nP;//压感
 		long m_nAngleX;//x轴倾角
 		long m_nAngleY;//y轴倾角
-		long m_nH;//高度  仅对特定机型有效（OEMM37_E220）
+
 		long m_nIndexOfPenKey;//笔按键索引  笔上建：1    笔下键：2
 		INT64 m_nTime;
 	} m_Pen;

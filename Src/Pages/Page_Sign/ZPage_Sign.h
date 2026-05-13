@@ -57,5 +57,11 @@ protected:
 
 	BOOL m_bGetFinger = FALSE;
 	CWorkThread m_WorkThread;
+
+public:
+	//added by Trion on 2026/02/06
+	int GetCurrentDeviceStatus();
+
+
 };
 

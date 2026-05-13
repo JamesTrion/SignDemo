@@ -11,6 +11,8 @@ ZSignDllObj::~ZSignDllObj()
 {
 	if (m_hSignDll != NULL)
 	{
+		pFuncSetCallback_TabletDataProc(NULL);
+		pFuncSetCallback_TabletEventProc(NULL);
 		FreeLibrary(m_hSignDll);
 	}
 }
@@ -25,13 +27,20 @@ BOOL ZSignDllObj::InitSignDllObj()
 	pFuncSendCmdToTablet = (Func_SendCmdToTablet)GetProcAddress(m_hSignDll, "SendCmdToTablet");
 	pFuncSetCallback_TabletDataProc = (Func_SetCallback_TabletDataProc)GetProcAddress(m_hSignDll, "SetCallback_TabletDataProc");
 	pFuncSetCallback_TabletEventProc = (Func_SetCallback_TabletEventProc)GetProcAddress(m_hSignDll, "SetCallback_TabletEventProc");
+	pFuncGetDeviceStatus = (Func_GetDeviceStatus)GetProcAddress(m_hSignDll, "GetDeviceStatus");	//added by Trion on 2026/02/06
 
 	if (NULL == pFuncStartScan) return FALSE;
 	if (NULL == pFuncGetErrorMessage) return FALSE;
 	if (NULL == pFuncSendCmdToTablet) return FALSE;
 	if (NULL == pFuncSetCallback_TabletDataProc) return FALSE;
 	if (NULL == pFuncSetCallback_TabletEventProc) return FALSE;
+	if (NULL == pFuncGetDeviceStatus)
+	{
+		CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi(_T("GetProcAddress of GetDeviceStatus returns NULL."));
+		return FALSE;	//added by Trion on 2026/02/06
+	}
 
+	CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi(_T("GetProcAddress of GetDeviceStatus is good."));
 	return TRUE;
 }
 

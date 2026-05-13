@@ -59,14 +59,44 @@ ZPage_Sign::~ZPage_Sign(void)
 void __stdcall TabletDataProc(IN const sTabletInfo *pTablet, emTabletDataType DataType, uTabletData tbData)
 {//由于涉及到UI操作 此处将数据交由UI线程处理
 	sTabletData *pData = new sTabletData(DataType, tbData);
-    PostMessage(g_pPage_Sign->GetWindow(),WM_TabletData, (WPARAM)g_DataDic.AddItem(pData), 0);
+
+	CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi(_T("In TabletDataProc, DataType:%d, Time:%lld"), DataType, tbData.m_Pen.m_nTime);
+	//CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi(_T("OnTabletDataProc, DataType:%d , Data:%s"),pData->m_DataType,pData->m_tbData);
+	
+	if (g_pPage_Sign != NULL)
+	{
+		int nRet = g_pPage_Sign->GetCurrentDeviceStatus();
+		CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi(_T("In TabletDataProc, GetCurrentDeviceStatus returns:%d"), nRet);
+	}
+	
+	PostMessage(g_pPage_Sign->GetWindow(),WM_TabletData, (WPARAM)g_DataDic.AddItem(pData), 0);
 }
 
 
 void __stdcall TabletEventProc(emTabletEventType EventType, IN const sTabletInfo *pTablet)
 {//由于涉及到UI操作 此处将数据交由UI线程处理
+
+	//bool bRun = true;
+	CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi(_T("In TabletEventProc, EventType:%d"), EventType);
+
+	/*
+	if (EventType == emTabletEventType::EventType_TabletNotFound)	
+	{
+		//added by Trion on 2026/05/13
+		bRun = false;
+	}
+	*/
+
+	if (g_pPage_Sign != NULL)
+	{
+		int nRet = g_pPage_Sign->GetCurrentDeviceStatus();
+		CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi(_T("In TabletEventProc, GetCurrentDeviceStatus returns:%d"), nRet);
+	}
+
+	//if (bRun==true)
 	SendMessage(g_pPage_Sign->GetWindow(), WM_TabletEvent, (WPARAM)EventType, (LPARAM)pTablet);
 }
+
 void ZPage_Sign::DoInit()
 {
 	__super::DoInit();
@@ -81,7 +111,19 @@ void ZPage_Sign::DoInit()
 	{
 		m_SignDllObj.pFuncSetCallback_TabletDataProc(TabletDataProc);  //设置处理手写数据的回调函数
 		m_SignDllObj.pFuncSetCallback_TabletEventProc(TabletEventProc);//设置处理数位板连接状态的回调函数
+
+		//m_SignDllObj.pFuncSetCallback_TabletDataProc(NULL);  //设置处理手写数据的回调函数
+		//m_SignDllObj.pFuncSetCallback_TabletEventProc(NULL);//设置处理数位板连接状态的回调函数
+		
+		int nVal = m_SignDllObj.pFuncGetDeviceStatus();
+		CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi(_T("Before StartScan , On ZPage_Sign:DoInit() returns GetDeviceStatus:%d"), nVal);
+		
 		m_SignDllObj.pFuncStartScan();
+
+		//::Sleep(100);	//added by Trion on 2026/02/06 for waiting the device status to be updated after StartScan is called , because in some cases the device status may not be updated immediately after StartScan is called , and this will cause the GetDeviceStatus to return wrong value if it is called immediately after StartScan is called , so add a sleep here to wait for the device status to be updated before calling GetDeviceStatus again
+
+		int nRet=m_SignDllObj.pFuncGetDeviceStatus();
+		CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi(_T("After StartScan , On ZPage_Sign:DoInit() returns GetDeviceStatus:%d"),nRet);
 	}
  
 	if (ZCfg::GetCfg_Red()) ((COptionUI *)FindSubControl(OptName_FingerColor_Red))->Selected(true);
@@ -822,6 +864,7 @@ LRESULT ZPage_Sign::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, bool
 {
 	if (WM_TabletEvent == uMsg)
 	{
+		CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi(_T("ZPage_Sign receives WM_TabletEvent before OnTabletEventProc"));
 		OnTabletEventProc((emTabletEventType)wParam, (sTabletInfo *)lParam);
 		bHandled = true;
 	}
@@ -843,6 +886,8 @@ LRESULT ZPage_Sign::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, bool
 	else if (WM_UpdataSign == uMsg)
 	{
 		m_pCanvasSign->Invalidate();
+		int nStatus = GetCurrentDeviceStatus();
+		CDebugWriter::OutputDBGStringMultipleAutoCloseToAnsi(_T("WM_UpdataSign gets GetDeviceStatus:%d"),nStatus);
 	}
 	return 0;
 }
@@ -899,8 +944,15 @@ LRESULT ZPage_Sign::OnTabletData(WPARAM wParam, LPARAM lParam)
 	}
 	return 0;
 }
+
 void ZPage_Sign::OnTabletEventProc(emTabletEventType EventType, IN const sTabletInfo *pTablet)
 {
+	if (emTabletEventType::EventType_TabletNotFound == EventType)
+	{
+		//To do: doing your UI operation or anything you like if tablet is not found.
+		return;
+	}
+
 	if (emTabletEventType::EventType_TabletConnected == EventType)
 	{
 		g_TabletInfo = *pTablet;
@@ -929,4 +981,11 @@ void ZPage_Sign::OnTabletEventProc(emTabletEventType EventType, IN const sTablet
 		FindSubControl(BtnName_StartSign)->SetEnabled(false);
 		FindSubControl(BtnName_ResetSign)->SetEnabled(false);
 	}
+}
+
+//added by Trion on 2026/02/06
+int ZPage_Sign::GetCurrentDeviceStatus()
+{
+	int nRet = m_SignDllObj.pFuncGetDeviceStatus();
+	return nRet;
 }

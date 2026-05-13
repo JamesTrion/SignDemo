@@ -3,6 +3,7 @@
 #include "C:\Git_Project\GaomonDemo\SignSDKAndDemo\Sign\Demo3\Src\Header\Huion_Sign.h"		//added by Trion on 2025/04/17
 #include "ZFinger10.h"
 #include "ZFinger5.h"
+#include "..\Dlg\DebugWriter.h"		//added by Trion on 2026/02/09 for using debug writer
 
 #define WM_TabletData      (WM_USER + 1024)
 #define WM_TabletEvent     (WM_USER + 1025)
@@ -48,6 +49,8 @@ public:
 	Func_SendCmdToTablet pFuncSendCmdToTablet = NULL;
 	Func_SetCallback_TabletDataProc pFuncSetCallback_TabletDataProc = NULL;
 	Func_SetCallback_TabletEventProc pFuncSetCallback_TabletEventProc = NULL;
+	Func_GetDeviceStatus pFuncGetDeviceStatus = NULL;		//added by Trion on 2026/02/06
+
 protected:
 	HMODULE	 m_hSignDll = NULL;
 };
